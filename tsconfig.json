@@ -5,5 +5,6 @@
     "module": "commonjs",
     "rootDir": "src",
     "jsx": "react-jsx",
+    "esModuleInterop": true // 支持在 ESM 语法中导入 CJS 模块
   }
 }
