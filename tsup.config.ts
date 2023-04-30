@@ -8,5 +8,5 @@ export default defineConfig({
   outDir: 'dist',
   format: ['cjs', 'esm'],
   dts: true, // 生成类型文件
-  shims: true, // 可以使esm环境中使用__dirname
+  shims: true // 可以使esm环境中使用__dirname
 });

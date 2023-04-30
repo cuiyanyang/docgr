@@ -1,11 +1,9 @@
-
-import { InlineConfig, build as viteBuild } from "vite";
-import type { RollupOutput } from 'rollup'
-import { CLIENT_ENTRY_PATH, SERVER_ENTRY_PATH } from "./constants";
-import { join, resolve } from "path";
+import { InlineConfig, build as viteBuild } from 'vite';
+import type { RollupOutput } from 'rollup';
+import { CLIENT_ENTRY_PATH, SERVER_ENTRY_PATH } from './constants';
+import { join, resolve } from 'path';
 import fs from 'fs-extra';
-import ora from 'ora';
-console.log(ora)
+// import ora from 'ora';
 // 用于绕过tsc编译
 // const dynamicImport = new Function('m', 'return import(m)');
 
@@ -19,13 +17,13 @@ export async function bundle(root: string) {
       rollupOptions: {
         input: isServer ? SERVER_ENTRY_PATH : CLIENT_ENTRY_PATH,
         output: {
-          format: isServer ? 'cjs' : 'esm',
+          format: isServer ? 'cjs' : 'esm'
         }
       }
     }
-  })
+  });
 
-  const spinner = ora();
+  // const spinner = ora();
   // spinner.start('building client and server bundles ...')
   try {
     const [clientBundle, serverBundle] = await Promise.all([
@@ -35,8 +33,8 @@ export async function bundle(root: string) {
       viteBuild(resolveViteConfig(true))
     ]);
     return [clientBundle, serverBundle] as [RollupOutput, RollupOutput];
-  } catch(e) {
-    console.log(e)
+  } catch (e) {
+    console.log(e);
   }
 }
 
@@ -45,7 +43,9 @@ export async function renderPage(
   root: string,
   clientBundle: RollupOutput
 ) {
-  const clientChunk = clientBundle.output.find(chunk => chunk.type === 'chunk' && chunk.isEntry)
+  const clientChunk = clientBundle.output.find(
+    (chunk) => chunk.type === 'chunk' && chunk.isEntry
+  );
   const appHtml = render();
   const html = `
   <!DOCTYPE html>
@@ -63,14 +63,14 @@ export async function renderPage(
   </html>
   `.trim();
   await fs.writeFile(join(root, 'build/index.html'), html);
-  await fs.remove(join(root, '.temp'))
+  await fs.remove(join(root, '.temp'));
 }
 
 export async function build(root: string) {
   // 1. 生成 client bundle 和 server bundle
   const [clientBundle] = await bundle(root);
   // 2. 引入ssr入口模块
-  const serverEntryPath = resolve(root, ".temp", "ssr-entry.js"); // 使用join话找不到模块
+  const serverEntryPath = resolve(root, '.temp', 'ssr-entry.js'); // 使用join话找不到模块
   // 3. 服务端渲染，产出HTML
   const { render } = await import(serverEntryPath);
   await renderPage(render, root, clientBundle);
