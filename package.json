@@ -9,6 +9,11 @@
     "build": "tsup",
     "lint": "eslint --fix --ext .ts,.tsx,.js,.jsx ./"
   },
+  "lint-staged": {
+    "**/*.{ts,tsx,js,jsx}": [
+      "eslint --fix"
+    ]
+  },
   "bin": {
     "docgr": "bin/index.js"
   },
@@ -29,6 +34,7 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "husky": "^8.0.3",
+    "lint-staged": "^13.2.2",
     "prettier": "^2.8.8",
     "rollup": "^3.21.2",
     "serve": "^14.0.1",
