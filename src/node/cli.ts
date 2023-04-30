@@ -1,5 +1,6 @@
 import cac from "cac";
 import { createDevServer } from "./dev";
+import { build } from "./build";
 
 const version = require("../../package.json").version;
 
@@ -12,8 +13,8 @@ cli.command('dev [root]', 'start dev server').action(async (root) => {
   server.printUrls();
 })
 
-cli.command('build [root]', 'build in production').action((root) => {
-  console.log(root)
+cli.command('build [root]', 'build in production').action(async (root) => {
+  await build(root);
 })
 
 cli.parse();
