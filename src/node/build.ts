@@ -3,9 +3,6 @@ import type { RollupOutput } from 'rollup';
 import { CLIENT_ENTRY_PATH, SERVER_ENTRY_PATH } from './constants';
 import { join, resolve } from 'path';
 import fs from 'fs-extra';
-// import ora from 'ora';
-// 用于绕过tsc编译
-// const dynamicImport = new Function('m', 'return import(m)');
 
 export async function bundle(root: string) {
   const resolveViteConfig = (isServer: boolean): InlineConfig => ({
@@ -23,8 +20,6 @@ export async function bundle(root: string) {
     }
   });
 
-  // const spinner = ora();
-  // spinner.start('building client and server bundles ...')
   try {
     const [clientBundle, serverBundle] = await Promise.all([
       // client build
@@ -70,7 +65,7 @@ export async function build(root: string) {
   // 1. 生成 client bundle 和 server bundle
   const [clientBundle] = await bundle(root);
   // 2. 引入ssr入口模块
-  const serverEntryPath = resolve(root, '.temp', 'ssr-entry.js'); // 使用join话找不到模块
+  const serverEntryPath = resolve(root, '.temp', 'ssr-entry.js');
   // 3. 服务端渲染，产出HTML
   const { render } = await import(serverEntryPath);
   await renderPage(render, root, clientBundle);
